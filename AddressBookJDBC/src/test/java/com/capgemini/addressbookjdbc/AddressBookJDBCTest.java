@@ -44,5 +44,12 @@ public class AddressBookJDBCTest {
 		assertEquals(1, contactsCount.get("State A"), 0);
 
 	}
+	@Test
+	public void givenContactData_WhenAddedToDB_ShouldSyncWithDB() throws DBServiceException {
+		serviceObj.insertNewContacts("Riya", "Singh", "Friend_Book", "Friend", "Agrico", "Jhar", "Jhar", "823561",
+				"9898778264", "riyasingh@gmail.com", "2017-05-15");
+		boolean isSynced = serviceObj.isAddressBookSyncedWithDB("Keerthi");
+		assertTrue(isSynced);
+	}
 
 }
