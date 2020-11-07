@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import org.junit.Test;
 public class AddressBookJDBCTest {
 	static AddressBookService serviceObj;
 	static List<ContactDetails> contactsList;
+	static Map<String, Integer> contactsCount;
 
 	@BeforeClass
 	public static void setUp() {
@@ -35,6 +37,12 @@ public class AddressBookJDBCTest {
 	public void givenDateRange_WhenRetrieved_ShouldMatchContactsCount() throws DBServiceException{
 		contactsList = serviceObj.viewContactsByDateRange(LocalDate.of(2015,01,01), LocalDate.now() );
 		assertEquals(3, contactsList.size());
+	}
+	@Test
+	public void givenAddressDB_WhenRetrievedCountByCity_ShouldReturnCountGroupedByState() throws DBServiceException {
+		contactsCount = serviceObj.countContactsByCityOrState("state");
+		assertEquals(1, contactsCount.get("State A"), 0);
+
 	}
 
 }
