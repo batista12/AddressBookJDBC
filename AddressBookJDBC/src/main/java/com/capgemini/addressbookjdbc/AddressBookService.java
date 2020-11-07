@@ -189,6 +189,41 @@ public class AddressBookService {
 			}
 			return viewAddressBook();
 		}
+	/**
+	 * @param contactList
+	 * @throws DBServiceException
+	 */
+	public void addEmployeeListToEmployeeAndPayrollWithThreads(List<ContactDetails> contactList) throws DBServiceException {
+		Map<Integer, Boolean> contactAditionStatus = new HashMap<>();
+		contactList.forEach(contact -> {
+			Runnable task = () -> {
+				contactAditionStatus.put(contact.hashCode(), false);
+				System.out.println("Contact being added : " + contact.getFirstName());
+				try {
+					insertNewContacts(contact.getFirstName(),contact.getLastName(),contact.getAddress_name(),contact.getAddressType(),
+							contact.getAddress(),contact.getCityName(), contact.getStateName(), contact.getZipCode(),
+							contact.getPhoneNumber(), contact.getEmailId(),contact.getDate());
+				} catch (DBServiceException e) {
+					e.printStackTrace();
+				}
+				contactAditionStatus.put(contact.hashCode(), true);
+				System.out.println("Contact added : " + contact.getFirstName());
+			};
+			Thread thread = new Thread(task, contact.getFirstName());
+			thread.start();
+		});
+
+		while (contactAditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
 }
+
 
 

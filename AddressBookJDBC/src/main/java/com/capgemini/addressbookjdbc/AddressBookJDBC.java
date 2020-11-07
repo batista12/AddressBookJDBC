@@ -16,10 +16,12 @@ public class AddressBookJDBC {
 	static String password = "Manasi@1998";
 	private static Connection con = null;
 
-	public static Connection getConnection() {
+
+	public synchronized static Connection getConnection() {
 		try {
 			// Driver Loading
 			Class.forName("com.mysql.cj.jdbc.Driver");
+			// Making the connection to Database
 			con = DriverManager.getConnection(url, userName, password);
 			System.out.println("Connection Successful");
 
